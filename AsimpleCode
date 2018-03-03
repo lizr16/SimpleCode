@@ -1,0 +1,991 @@
+#include<iostream>
+#include<fstream>
+#include<string>
+using namespace std;
+typedef struct node {//结点定义
+	char StudentNumber[10];//学号
+	string Name;//姓名
+	bool Sex;//性别
+	string HomeAddress;//地址
+	char PhoneNumber[11];//电话
+	float Chinese;///语文成绩
+	float Mathematics;//数学成绩
+	float English;//英语成绩
+	float AverageGrade;//平均成绩
+	int Ranking;//排名
+	float StudentGrade;//同学互评分数
+	float MoralityGrade;//品德成绩
+	float TeacherGrade;//任课教师评分
+	float AllGrade;//综合测评总分
+	int AllRanking;//综合测评名次
+	node()
+	{
+		AllRanking=0;
+		Ranking=0;
+	}
+    struct node *next;
+}NODE;
+class LinkList
+{
+private:
+public:
+	NODE *head;
+    LinkList() { head = NULL; }//初始化链表
+	~LinkList(){ head = NULL; }//赋值为空
+    bool clearSqList();//清空链表
+    bool isEmpty() { return head == NULL; }//判断非空
+    int Length();//得到链表长度
+    bool GetElem(int i, NODE *e);//得到第i个位置的结点
+	bool GetElemStudentNumber(char A[], NODE *e);//用学号得到
+    bool Insert(int i, NODE *e);
+    bool Delete(int i);
+    NODE * Reverse();
+};
+bool LinkList::clearSqList()//清空函数，和析构一样
+{
+    NODE *p = head;
+    while (head)
+    {
+        p = head;
+        head = head->next;
+        delete(p);
+    }
+	return true;
+}
+int LinkList::Length()
+{
+    NODE *p = head;
+    int len = 0;
+    while (p != NULL)
+    {
+        len++;
+        p = p->next;
+    }
+    return len;
+}//获取链表长度
+bool LinkList::GetElem(int i, NODE *e)//*e是返回的元素
+{
+    NODE *p = head;
+    int j = 0;
+    while (p&&j < i)
+    {
+        p = p->next;
+        j++;
+    }
+    if (p == NULL) return false;
+    *e = *p;
+	e->next=NULL;
+    return true;
+}
+bool RightStudentNumber(char A[],char B[])
+{
+	for(int i=0;i<10;i++)
+	{
+		if(A[i]!=B[i])
+		{
+			return false;
+		}
+	}
+	return true;
+}
+bool LinkList::GetElemStudentNumber(char A[], NODE *e)//*e是返回的元素
+{
+    NODE *p = head;
+    int j = 0;
+	while (j<Length()&&!RightStudentNumber(p->StudentNumber,A))
+    {
+        p = p->next;
+        j++;
+    }
+    if (p == NULL) 
+		return false;
+    *e = *p;
+	e->next=NULL;
+    return true;
+}
+int ChangeNode(NODE *p,NODE *q)
+{
+	NODE temp;
+	temp.AllGrade=p->AllGrade;
+	temp.AllRanking=p->AllRanking;
+	temp.AverageGrade=p->AverageGrade;
+	temp.Chinese=p->Chinese;
+	temp.English=p->English;
+	temp.HomeAddress=p->HomeAddress;
+	temp.Mathematics=p->Mathematics;
+	temp.MoralityGrade=p->MoralityGrade;
+	temp.Name=p->Name;
+	for(int i=0;i<11;i++)
+		temp.PhoneNumber[i]=p->PhoneNumber[i];
+	temp.Ranking=p->Ranking;
+	temp.Sex=p->Sex;
+	temp.StudentGrade=p->StudentGrade;
+	for(int i=0;i<10;i++)
+		temp.StudentNumber[i]=p->StudentNumber[i];
+	temp.TeacherGrade=p->TeacherGrade;
+	p->AllGrade=q->AllGrade;
+	p->AllRanking=q->AllRanking;
+	p->AverageGrade=q->AverageGrade;
+	p->Chinese=q->Chinese;
+	p->English=q->English;
+	p->HomeAddress=q->HomeAddress;
+	p->Mathematics=q->Mathematics;
+	p->MoralityGrade=q->MoralityGrade;
+	p->Name=q->Name;
+	for(int i=0;i<11;i++)
+		p->PhoneNumber[i]=q->PhoneNumber[i];
+	p->Ranking=q->Ranking;
+	p->Sex=q->Sex;
+	p->StudentGrade=q->StudentGrade;
+	for(int i=0;i<10;i++)
+		p->StudentNumber[i]=q->StudentNumber[i];
+	p->TeacherGrade=q->TeacherGrade;
+	q->AllGrade=temp.AllGrade;
+	q->AllRanking=temp.AllRanking;
+	q->AverageGrade=temp.AverageGrade;
+	q->Chinese=temp.Chinese;
+	q->English=temp.English;
+	q->HomeAddress=temp.HomeAddress;
+	q->Mathematics=temp.Mathematics;
+	q->MoralityGrade=temp.MoralityGrade;
+	q->Name=temp.Name;
+	for(int i=0;i<11;i++)
+		q->PhoneNumber[i]=temp.PhoneNumber[i];
+	q->Ranking=temp.Ranking;
+	q->Sex=temp.Sex;
+	q->StudentGrade=temp.StudentGrade;
+	for(int i=0;i<10;i++)
+		q->StudentNumber[i]=temp.StudentNumber[i];
+	q->TeacherGrade=temp.TeacherGrade;
+	return 0;
+}
+int CopyNode(NODE *p,NODE *q)
+{
+	p->AllGrade=q->AllGrade;
+	p->AllRanking=q->AllRanking;
+	p->AverageGrade=q->AverageGrade;
+	p->Chinese=q->Chinese;
+	p->English=q->English;
+	p->HomeAddress=q->HomeAddress;
+	p->Mathematics=q->Mathematics;
+	p->MoralityGrade=q->MoralityGrade;
+	p->Name=q->Name;
+	for(int i=0;i<11;i++)
+		p->PhoneNumber[i]=q->PhoneNumber[i];
+	p->Ranking=q->Ranking;
+	p->Sex=q->Sex;
+	p->StudentGrade=q->StudentGrade;
+	for(int i=0;i<10;i++)
+		p->StudentNumber[i]=q->StudentNumber[i];
+	p->TeacherGrade=q->TeacherGrade;
+	return 0;
+}
+bool LinkList::Insert(int i, NODE *e)
+{
+    NODE *p = head,*s;
+    int j = 0;
+    if (i == 0)
+    {
+        s = (NODE *)new NODE[1];
+		CopyNode(s,e);
+        s->next = p;
+        head = s;
+        return true;
+    }
+    while (p&&j < i - 1)
+    {
+        p = p->next;
+        j++;
+    }
+    if (p == NULL)
+        return false;//到队尾了
+    s= (NODE *)new NODE[1];
+	CopyNode(s,e);
+    s->next = p->next;
+    p->next = s;
+    return true;
+}
+bool LinkList::Delete(int i)
+{
+    NODE *p = head;
+    if (p == NULL)
+		return false;
+    int j = 0;
+    if (i == 0)
+    {
+        head = head->next;
+        return true;
+    }
+    while (p&&j < i - 1)
+    {
+        j++;
+        p = p->next;
+    }
+    if (p == NULL)
+        return false;
+	if(p->next)
+		p->next = p->next->next;
+    return true;
+}
+NODE* LinkList::Reverse()
+{
+    if (head == NULL || head->next == NULL) return head;
+    NODE *p = head,*q=head->next,*r;
+    head->next = NULL;
+    while (q)
+    {
+        r = q->next;
+        q->next = p;
+        p = q;
+        q = r;
+    }
+    head = p;
+    return head;
+}
+int InputData(NODE *e)
+{
+	cout<<"学号:"<<endl;
+	char A[100];
+	cin>>A;
+	while(1)
+	{
+		if(strlen(A)!=10)
+		{
+			cout<<"长度错误，请重新输入"<<endl;
+			cin>>A;	
+		}
+		else
+			break;
+	}
+	for(int j=0;j<10;j++)
+		e->StudentNumber[j]=A[j];
+	cout<<"姓名:"<<endl;
+	cin>>e->Name;
+	cout<<"性别:(男生输入M，女生输入F)"<<endl;
+	char NName;
+	cin>>NName;
+	while(1)
+	{
+		if(NName=='M')
+		{
+			e->Sex=1;
+			break;
+		}
+		else if(NName=='F')
+		{
+			e->Sex=0;
+			break;
+		}
+		else
+		{
+			cout<<"输入有误，请重新输入"<<endl;
+			cin>>NName;
+		}
+	}
+	cout<<"地址:"<<endl;
+	cin>>e->HomeAddress;
+	cout<<"电话:"<<endl;
+	cin>>A;
+	while(1)
+	{
+		if(strlen(A)!=11)
+		{
+			cout<<"长度错误，请重新输入"<<endl;
+			cin>>A;	
+		}
+		else
+			break;
+	}
+	for(int j=0;j<11;j++)
+		e->PhoneNumber[j]=A[j];
+	while(cout<<"语文成绩:"<<endl,cin>>e->Chinese,cin.fail())
+    {
+    cout<<"try again!"<<endl;
+    cin.clear(); //清除std::cin的错误状态
+    cin.sync(); //清空输入缓冲区
+    }
+	while(cout<<"数学成绩:"<<endl,cin>>e->Mathematics,cin.fail())
+    {
+    cout<<"try again!"<<endl;
+    cin.clear(); //清除std::cin的错误状态
+    cin.sync(); //清空输入缓冲区
+    }
+	while(cout<<"外语成绩:"<<endl,cin>>e->English,cin.fail())
+    {
+    cout<<"try again!"<<endl;
+    cin.clear(); //清除std::cin的错误状态
+    cin.sync(); //清空输入缓冲区
+    }
+	e->AverageGrade=(e->Chinese+e->Mathematics+e->English)/3;
+	while(cout<<"同学互评分数:"<<endl,cin>>e->StudentGrade,cin.fail())
+    {
+    cout<<"try again!"<<endl;
+    cin.clear(); //清除std::cin的错误状态
+    cin.sync(); //清空输入缓冲区
+    }
+	while(cout<<"品德成绩:"<<endl,cin>>e->MoralityGrade,cin.fail())
+    {
+    cout<<"try again!"<<endl;
+    cin.clear(); //清除std::cin的错误状态
+    cin.sync(); //清空输入缓冲区
+    }
+	while(cout<<"任课教师评分:"<<endl,cin>>e->TeacherGrade,cin.fail())
+    {
+    cout<<"try again!"<<endl;
+    cin.clear(); //清除std::cin的错误状态
+    cin.sync(); //清空输入缓冲区
+    }
+	e->AllGrade=0.6*e->AverageGrade+0.1*e->StudentGrade+0.1*e->MoralityGrade+0.2*e->TeacherGrade;
+	if(e->Ranking)
+		e->Ranking=0;
+	if(e->AllRanking)
+		e->AllRanking=0;
+	return 0;
+}
+void PrintData(NODE e)
+	{
+		cout<<"学号:";
+		for(int i=0;i<10;i++)
+			cout<<e.StudentNumber[i];
+		cout<<endl;
+		cout<<"姓名:"<<e.Name<<endl;
+		cout<<"性别:(男生输入M，女生输入F)";
+		if(e.Sex==1)
+			cout<<"M"<<endl;
+		else
+			cout<<"F"<<endl;
+		cout<<"地址:"<<e.HomeAddress<<endl;
+		cout<<"电话:";
+		for(int i=0;i<11;i++)
+			cout<<e.PhoneNumber[i];
+		cout<<endl;
+		cout<<"语文成绩:"<<e.Chinese<<endl;
+		cout<<"数学成绩:"<<e.Mathematics<<endl;
+		cout<<"外语成绩:"<<e.English<<endl;
+		cout<<"平均成绩:"<<e.AverageGrade<<endl;
+		cout<<"成绩排名:"<<e.Ranking<<endl;
+		cout<<"同学互评分数:"<<e.StudentGrade<<endl;
+		cout<<"品德成绩:"<<e.MoralityGrade<<endl;
+		cout<<"任课教师评分:"<<e.TeacherGrade<<endl;
+		cout<<"综合成绩:"<<e.AllGrade<<endl;
+		cout<<"综合排名:"<<e.AllRanking<<endl;
+	}
+LinkList* ListSelectSortRanking(LinkList* head)
+{
+    int i = 0;
+    int j = 0;
+	int tmpint=0;
+	LinkList * L = head;
+	LinkList *tmp=NULL;//作为一个临时量
+    NODE * p=NULL;
+    NODE * min=NULL;
+	p=new NODE;
+	min=new NODE;
+	tmp=new LinkList;
+	int sum=L->Length(); 
+    if (head==NULL)//如果链表为空直接返回
+		return NULL;
+	else
+	{
+		for(int i=0;i<sum;i++)
+		{
+			L->GetElem(0,min);
+			tmpint=0;
+			for(int j=0;j<L->Length();j++)
+			{	
+				L->GetElem(j,p);
+				if(p->AverageGrade<min->AverageGrade)
+				{
+					CopyNode(min,p);
+					tmpint=j;
+				}
+			}
+			L->Delete(tmpint);
+			min->Ranking=sum-i;
+			tmp->Insert(0,min);
+		}
+	}
+	head=tmp;
+	return head;
+}
+LinkList* ListSelectSortAllRanking(LinkList* head)
+{
+    int i = 0;
+    int j = 0;
+	int tmpint=0; 
+	LinkList * L = head;
+	LinkList *tmp=NULL; //作为一个临时量
+    NODE * p=NULL;
+    NODE * min=NULL;
+	p=new NODE;
+	min=new NODE;
+	tmp=new LinkList;
+	int sum=L->Length();
+    if (head==NULL) //如果链表为空直接返回
+		return NULL;
+	else
+	{
+		for(int i=0;i<sum;i++)
+		{
+			L->GetElem(0,min);
+			tmpint=0;
+			for(int j=0;j<L->Length();j++)
+			{	
+				L->GetElem(j,p);
+				if(p->AllGrade<min->AllGrade)
+				{
+					CopyNode(min,p);
+					tmpint=j;
+				}
+			}
+			L->Delete(tmpint);
+			min->AllRanking=sum-i;
+			tmp->Insert(0,min);
+		}
+	}
+	head=tmp;
+	return head;
+}
+bool CompareStudentNumber(char A[],char B[])
+{
+	for(int i=0;i<10;i++)
+	{
+		if(A[i]!=B[i])
+		{
+			if(A[i]>B[i])
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			continue;
+		}
+	}
+	return false;
+}
+LinkList* ListSelectSortStudentNumber(LinkList* head)
+{
+    int i = 0;
+    int j = 0;
+	int tmpint=0;
+	LinkList * L = head;
+	LinkList *tmp=NULL; //作为一个临时量
+    NODE * p=NULL;
+    NODE * min=NULL;
+	p=new NODE;
+	min=new NODE;
+	tmp=new LinkList;
+	int sum=L->Length();
+    if (head==NULL)  //如果链表为空直接返回
+		return NULL;
+	else
+	{
+		for(int i=0;i<sum;i++)
+		{
+			L->GetElem(0,min);
+			tmpint=0;
+			for(int j=0;j<L->Length();j++)
+			{	
+				L->GetElem(j,p);
+				if(!(CompareStudentNumber(p->StudentNumber,min->StudentNumber)))
+				{
+					CopyNode(min,p);
+					tmpint=j;
+				}
+			}
+			L->Delete(tmpint);
+			tmp->Insert(i,min);
+		}
+	}
+	head=tmp;
+	return head;
+}
+int WordOutput(LinkList *head)
+{
+	ofstream outfile("f1.dat",ios::out);
+	if(!outfile)
+	{
+		cerr<<"open error!"<<endl;
+		exit(1);
+	}
+	int tt=head->Length();
+	outfile.write((char*)&tt,sizeof(int));
+	 for (int i = 0;i < head->Length();i++)//遍历该链表
+    {
+		NODE temp;
+        if (head->GetElem(i, &temp))
+		{
+			outfile.write((char*)&temp.AllGrade,sizeof(temp.AllGrade));
+			outfile.write((char*)&temp.AllRanking,sizeof(temp.AllRanking));
+			outfile.write((char*)&temp.AverageGrade,sizeof(temp.AverageGrade));
+			outfile.write((char*)&temp.Chinese,sizeof(temp.Chinese));
+			outfile.write((char*)&temp.English,sizeof(temp.English));
+			int tmp=temp.HomeAddress.length();
+			outfile.write((char*)&tmp,sizeof(tmp));
+			for(int i=0;i<tmp;i++)
+				outfile.write((char*)&temp.HomeAddress[i],sizeof(char));
+			outfile.write((char*)&temp.Mathematics,sizeof(temp.Mathematics));
+			outfile.write((char*)&temp.MoralityGrade,sizeof(temp.MoralityGrade));
+			tmp=temp.Name.length();
+			outfile.write((char*)&tmp,sizeof(tmp));
+			for(int i=0;i<tmp;i++)
+				outfile.write((char*)&temp.Name[i],sizeof(char));
+			for(int i=0;i<11;i++)
+				outfile.write((char*)&temp.PhoneNumber[i],sizeof(char));
+			outfile.write((char*)&temp.Ranking,sizeof(temp.Ranking));
+			outfile.write((char*)&temp.Sex,sizeof(temp.Sex));
+			outfile.write((char*)&temp.StudentGrade,sizeof(temp.StudentGrade));
+			for(int i=0;i<10;i++)
+				outfile.write((char*)&temp.StudentNumber[i],sizeof(char));
+			outfile.write((char*)&temp.TeacherGrade,sizeof(temp.TeacherGrade));
+		}
+    }
+	outfile.close();
+	return 0;
+}
+LinkList* WordInput(LinkList *head)
+{
+	head=&LinkList();
+	ifstream infile("f1.dat",ios::in);
+	if(!infile)
+	{
+		cerr<<"open error!"<<endl;
+		exit(1);
+	}
+	NODE temp;
+	int num;
+	infile.read((char*)&num,sizeof(int));
+	cout<<num<<endl;
+	for(int i=0;i<num;i++)
+	{
+		infile.read((char*)&temp.AllGrade,sizeof(temp.AllGrade));
+		infile.read((char*)&temp.AllRanking,sizeof(temp.AllRanking));
+		infile.read((char*)&temp.AverageGrade,sizeof(temp.AverageGrade));
+		infile.read((char*)&temp.Chinese,sizeof(temp.Chinese));
+		infile.read((char*)&temp.English,sizeof(temp.English));
+		int tmp;
+		infile.read((char*)&tmp,sizeof(tmp));
+		for(int i=0;i<tmp;i++)
+		{
+			char haha;
+			infile.read((char*)&haha,sizeof(char));
+			temp.HomeAddress=temp.HomeAddress+haha;
+		}
+		infile.read((char*)&temp.Mathematics,sizeof(temp.Mathematics));
+		infile.read((char*)&temp.MoralityGrade,sizeof(temp.MoralityGrade));
+		infile.read((char*)&tmp,sizeof(tmp));
+		for(int i=0;i<tmp;i++)
+		{
+			char haha;
+			infile.read((char*)&haha,sizeof(char));
+			temp.Name=temp.Name+haha;
+		}
+		for(int i=0;i<11;i++)
+			infile.read((char*)&temp.PhoneNumber[i],sizeof(char));
+		infile.read((char*)&temp.Ranking,sizeof(temp.Ranking));
+		infile.read((char*)&temp.Sex,sizeof(temp.Sex));
+		infile.read((char*)&temp.StudentGrade,sizeof(temp.StudentGrade));
+		for(int i=0;i<10;i++)
+			infile.read((char*)&temp.StudentNumber[i],sizeof(char));
+		infile.read((char*)&temp.TeacherGrade,sizeof(temp.TeacherGrade));
+		head->Insert(0,&temp);
+		temp.HomeAddress="";
+		temp.Name="";
+	}
+	infile.close();
+	return head;
+}
+int main()
+{
+	LinkList li;//创建
+	LinkList *Link=&li;
+	LinkList *tmp=NULL,input;
+	int i;
+	while(1)
+	{
+		cout<<endl<<endl<<endl<<endl;
+		cout<<"          ┌—————————————————————————┐"<<endl; 
+		cout<<"          │     感谢您使用：学生综合测评系统 Ver1.0          │"<<endl; 
+		cout<<"          │                                                  │"<<endl;
+		cout<<"          │[设计制作]：李卓然                                │"<<endl; 
+		cout<<"          │[联系Q Q ]：448038310                             │"<<endl;
+		cout<<"          │[联系邮箱]：xihuan2012@163.com                    │"<<endl;
+		cout<<"          │[简单说明]：开始界面，谢谢您的使用！              │"<<endl;
+		cout<<"          │1.创建学生数据                                    │"<<endl;
+		cout<<"          │2.读取已有学生数据                                │"<<endl;
+		cout<<"          │3.添加学生信息                                    │"<<endl;
+		cout<<"          │4.修改学生信息                                    │"<<endl;
+		cout<<"          │5.删除学生信息                                    │"<<endl;
+		cout<<"          │6.用学号查询学生信息                              │"<<endl;
+		cout<<"          │7.浏览全部学生信息                                │"<<endl;
+		cout<<"          │8.关于作者                                        │"<<endl;
+		cout<<"          │9.退出程序                                        │"<<endl;
+		cout<<"          └—————————————————————————┘"<<endl; 
+    	cout<<"           请输入你想要输入的编号：";
+    	cin>>i;
+		if(i==1)
+		{
+			system("cls");
+			cout<<endl<<endl<<endl<<endl;
+			cout<<"          ┌—————————————————————————┐"<<endl; 
+			cout<<"          │      感谢您使用：学生综合测评系统 Ver1.0         │"<<endl; 
+			cout<<"          │这里是创建新学生数据界面                          │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │请输入你想要输入的学生人数：                      │"<<endl; 
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          └—————————————————————————┘"<<endl; 
+			int num;
+			cin>>num;
+			for(int j=0;j<num;j++)
+			{
+				system("cls");
+				cout<<endl<<endl<<endl<<endl;
+				cout<<"          ┌—————————————————————————┐"<<endl; 
+				cout<<"          │      感谢您使用：学生综合测评系统 Ver1.0         │"<<endl; 
+				cout<<"          │这里是创建新学生数据界面                          │"<<endl;
+				cout<<"          │                                                  │"<<endl;
+				cout<<"          │请输入你想要输入的第"<<j+1<<"个学生的基本数据：           │"<<endl; 
+				cout<<"          │                                                  │"<<endl;
+				cout<<"          │                                                  │"<<endl;
+				cout<<"          └—————————————————————————┘"<<endl; 
+				NODE temp;
+				InputData(&temp);
+				li.Insert(j,&temp);
+			}
+			Link=ListSelectSortRanking(Link);//排序
+			Link=ListSelectSortAllRanking(Link);
+			Link=ListSelectSortStudentNumber(Link);
+			WordOutput(Link);
+			cout<<"创建成功！"<<endl;
+			system("cls");
+			cout<<endl<<endl<<endl<<endl;
+			cout<<"          ┌—————————————————————————┐"<<endl; 
+			cout<<"          │      感谢您使用：学生综合测评系统 Ver1.0         │"<<endl; 
+			cout<<"          │这里是创建学生数据界面的结束页                    │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │1.返回上一级菜单                                  │"<<endl; 
+			cout<<"          │2.退出                                            │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          └—————————————————————————┘"<<endl; 
+	    	cout<<"           请输入你想要输入的编号：";
+			int j;
+			cin>>j;
+			while(1)
+			{
+			if(j==1)
+			{
+				system("cls");
+				break;
+			}
+			if(j==2)
+			{
+				i=0;
+				break;
+			}
+			}
+			if(i==0)
+				break;
+		}
+		if(i==2)
+		{
+			system("cls");
+			cout<<endl<<endl<<endl<<endl;
+			cout<<"          ┌—————————————————————————┐"<<endl; 
+			cout<<"          │      感谢您使用：学生综合测评系统 Ver1.0         │"<<endl; 
+			cout<<"          │这里是添加学生数据界面的结束页                    │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │读取成功！                                        │"<<endl; 
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          └—————————————————————————┘"<<endl; 
+			Link=WordInput(&input);
+			input=*Link;
+			Link=&input;
+			cout<<"1.返回上一级菜单"<<endl;
+		    cout<<"2.退出"<<endl;
+			int  j;
+			cin>>j;
+			while(1)
+			{
+			if(j==1)
+			{
+				system("cls");
+				break;
+			}
+			if(j==2)
+			{
+				i=0;
+				break;
+			}
+			}
+			if(i==0)
+				break;
+		}
+		if(i==3)
+		{
+			system("cls");
+			cout<<endl<<endl<<endl<<endl;
+			cout<<"          ┌—————————————————————————┐"<<endl; 
+			cout<<"          │      感谢您使用：学生综合测评系统 Ver1.0         │"<<endl; 
+			cout<<"          │这里是添加学生数据界面的结束页                    │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │请输入你想要添加同学的基本信息：                  │"<<endl; 
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          └—————————————————————————┘"<<endl; 
+			NODE emp;//插入
+			InputData(&emp);	
+			Link->Insert(0,&emp);//实现了操作完1之后操作2
+			Link=ListSelectSortRanking(Link);//排序
+			Link=ListSelectSortAllRanking(Link);
+			Link=ListSelectSortStudentNumber(Link);
+			WordOutput(Link);
+			cout<<"创建成功！"<<endl;
+			cout<<"1.返回上一级菜单"<<endl;
+		    cout<<"2.退出"<<endl;
+			int  j;
+			cin>>j;
+			while(1)
+			{
+			if(j==1)
+			{
+				system("cls");
+				break;
+			}
+			if(j==2)
+			{
+				i=0;
+				break;
+			}
+			}
+			if(i==0)
+				break;
+		}
+		if(i==4)
+		{
+			system("cls");
+			cout<<"          ┌—————————————————————————┐"<<endl; 
+			cout<<"          │      感谢您使用：学生综合测评系统 Ver1.0         │"<<endl; 
+			cout<<"          │这里是添加学生数据界面的结束页                    │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │请输入你想要修改同学的学号：                      │"<<endl; 
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          └—————————————————————————┘"<<endl; 
+			char A[10];
+			for(int a1=0;a1<10;a1++)
+				cin>>A[a1];
+			for(int al=0;al<Link->Length();al++)
+			{
+				NODE pt;
+				Link->GetElem(al,&pt);
+				if(RightStudentNumber(pt.StudentNumber,A))
+				{
+					cout<<"请输入该同学的新信息"<<endl;
+					InputData(&pt);
+					Link->Delete(al);
+					Link->Insert(al,&pt);
+				}
+			}
+			cout<<"修改成功！"<<endl;
+			cout<<"1.返回上一级菜单"<<endl;
+		    cout<<"2.退出"<<endl;
+			int  j;
+			cin>>j;
+			while(1)
+			{
+			if(j==1)
+			{
+				system("cls");
+				break;
+			}
+			if(j==2)
+			{
+				i=0;
+				break;
+			}
+			}
+			if(i==0)
+				break;
+		}
+		if(i==5)
+		{
+			system("cls");
+			cout<<"          ┌—————————————————————————┐"<<endl; 
+			cout<<"          │      感谢您使用：学生综合测评系统 Ver1.0         │"<<endl; 
+			cout<<"          │这里是删除学生数据界面的结束页                    │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │请输入你想要删除同学的学号：                      │"<<endl; 
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          └—————————————————————————┘"<<endl; 
+			char A[10];
+			for(int a1=0;a1<10;a1++)
+				cin>>A[a1];
+			for(int al=0;al<Link->Length();al++)
+			{
+				NODE pt;
+				Link->GetElem(al,&pt);
+				if(RightStudentNumber(pt.StudentNumber,A))
+				{
+					Link->Delete(al);
+				}
+			}
+			cout<<"删除成功！"<<endl;
+		    cout<<"1.返回上一级菜单"<<endl;
+		    cout<<"2.退出"<<endl;
+			int  j;
+			cin>>j;
+			while(1)
+			{
+			if(j==1)
+			{
+				system("cls");
+				break;
+			}
+			if(j==2)
+			{
+				i=0;
+				break;
+			}
+			}
+			if(i==0)
+				break;
+		}
+		if(i==6)
+		{
+			system("cls");
+			cout<<"          ┌—————————————————————————┐"<<endl; 
+			cout<<"          │      感谢您使用：学生综合测评系统 Ver1.0         │"<<endl; 
+			cout<<"          │这里是查询学生数据界面的结束页                    │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │请输入你想要查询同学的学号：                      │"<<endl; 
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          └—————————————————————————┘"<<endl; 
+			Link=ListSelectSortRanking(Link);//排序
+			Link=ListSelectSortAllRanking(Link);
+			Link=ListSelectSortStudentNumber(Link);
+			char A[10];
+			for(int a1=0;a1<10;a1++)
+				cin>>A[a1];
+			for(int al=0;al<Link->Length();al++)
+			{
+				NODE pt;
+				Link->GetElem(al,&pt);
+				if(RightStudentNumber(pt.StudentNumber,A))
+				{
+					cout<<"该学生的信息为:"<<endl;
+					PrintData(pt);
+				}
+			}
+		    cout<<"1.返回上一级菜单"<<endl;
+		    cout<<"2.退出"<<endl;
+			int  j;
+			cin>>j;
+			while(1)
+			{
+			if(j==1)
+			{
+				system("cls");
+				break;
+			}
+			if(j==2)
+			{
+				i=0;
+				break;
+			}
+			}
+			if(i==0)
+				break;
+		}
+		if(i==7)
+		{
+			system("cls");
+			cout<<"          ┌—————————————————————————┐"<<endl; 
+			cout<<"          │      感谢您使用：学生综合测评系统 Ver1.0         │"<<endl; 
+			cout<<"          │这里是学生数据界面的结束页                        │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │所有学生数据如下：                                │"<<endl; 
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          │                                                  │"<<endl;
+			cout<<"          └—————————————————————————┘"<<endl; 
+			Link=ListSelectSortRanking(Link);//排序
+			Link=ListSelectSortAllRanking(Link);
+			Link=ListSelectSortStudentNumber(Link);
+			for(int al=0;al<Link->Length();al++)
+			{
+				NODE pt;
+				Link->GetElem(al,&pt);
+				PrintData(pt);
+			}
+		    cout<<"1.返回上一级菜单"<<endl;
+		    cout<<"2.退出"<<endl;
+			int  j;
+			cin>>j;
+			while(1)
+			{
+			if(j==1)
+			{
+				system("cls");
+				break;
+			}
+			if(j==2)
+			{
+				i=0;
+				break;
+			}
+			}
+			if(i==0)
+				break;
+		}
+		if(i==8)
+		{
+			system("cls");
+			cout<<"          ┌—————————————————————————┐"<<endl; 
+			cout<<"          │      感谢您使用：学生综合测评系统 Ver1.0         │"<<endl; 
+			cout<<"          │来自无63的李卓然同学                              │"<<endl;
+			cout<<"          │一个编程超级弱的同学                              │"<<endl;
+			cout<<"          │确实编程的能力比较差                              │"<<endl;
+			cout<<"          │但我一定会更加努力做好编程的                      │"<<endl;
+			cout<<"          │[游戏制作]：李卓然                                │"<<endl; 
+			cout<<"          │[联系Q Q ]：448038310                             │"<<endl;
+			cout<<"          │[联系邮箱]：xihuan2012@163.com                    │"<<endl;
+			cout<<"          │[简单说明]：关于作者界面，谢谢您的使用！          │"<<endl;
+			cout<<"          └—————————————————————————┘"<<endl; 
+		    cout<<"1.返回上一级菜单"<<endl;
+		    cout<<"2.退出"<<endl;
+			int  j;
+			cin>>j;
+			while(1)
+			{
+			if(j==1)
+			{
+				system("cls");
+				break;
+			}
+			if(j==2)
+			{
+				i=0;
+				break;
+			}
+			}
+			if(i==0)
+				break;
+		}
+		if(i==9)
+		{
+			cout<<"感谢您的使用，再见！"<<endl;
+			WordOutput(Link);
+			break;
+		}
+		if(i!=1&&i!=2&&i!=3&&i!=4&&i!=5&&i!=6&&i!=7&&i!=8&&i!=9)
+		{
+			cout<<"输入有误，请重新输入"<<endl;
+			system("cls");
+		}
+	}
+	return 0;
+}
